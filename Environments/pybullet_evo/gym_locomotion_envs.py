@@ -7,6 +7,7 @@ import os, inspect
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 from gym import spaces
 
+
 class WalkerBaseBulletEnv(MJCFBaseBulletEnv):
   def __init__(self, robot, render=False):
     # print("WalkerBase::__init__ start")
@@ -198,6 +199,7 @@ class WalkerBaseBulletEnv(MJCFBaseBulletEnv):
     image = image * (1./255.)
     image = image[:,:,0:3]
     return image
+
 
 class HalfCheetahBulletEnv(WalkerBaseBulletEnv):
   def __init__(self, render=False, design = None):

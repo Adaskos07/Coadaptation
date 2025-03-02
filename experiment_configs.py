@@ -10,8 +10,9 @@ sac_pso_batch = {
     'design_cycles' : 55,                       # Number of design adaptations after the initial designs
     'state_batch_size' : 32,                    # Size of the batch used during the design optimization process to estimate fitness of design
     'initial_episodes' : 3,                     # Number of initial episodes for each design before we start the training of the individual networks. Useful if steps per episode is low and we want to fill the replay.
-    'use_gpu' : True,                           # Use True when GPU should be used for training and inference
-    'use_cpu_for_rollout': False,               # TODO: Not used
+    # 'use_gpu' : True,                           # Use True when GPU should be used for training and inference
+    'use_gpu' : False,                           # Use True when GPU should be used for training and inference
+    'use_cpu_for_rollout': True,               # TODO: Not used
     'cuda_device': 0,                           # Which cuda device to use. Only relevant if you have more than one GPU
     'exploration_strategy': 'random',           # Type of design exploration to use - we do usually one greedy design optimization and one random selection of a design
     'design_optim_method' : 'pso_batch',        # Which design optimization method to use
@@ -33,7 +34,7 @@ sac_pso_batch = {
             target_update_period=1,
             policy_lr=3E-4,
             qf_lr=3E-4,
-            alpha=0.01,
+            # alpha=0.01,
             ),
         algo_params_pop=dict(                       # Parameters for the RL learner for the individual networks
             # num_epochs=int(1),
@@ -49,7 +50,7 @@ sac_pso_batch = {
             target_update_period=1,
             policy_lr=3E-4,
             qf_lr=3E-4,
-            alpha=0.01,
+            # alpha=0.01,
             ),
         net_size=200,                       # Number of neurons in hidden layer
         network_depth=3,                    # Number of hidden layers
@@ -85,7 +86,7 @@ sac_pso_sim = {
     'rl_algorithm_config' : dict(
         algo_params=dict(
             # num_epochs=int(1),
-            # num_steps_per_epoch=1000,
+            # num_steps_per_epoch=5,
             # num_steps_per_eval=1,
             # num_updates_per_env_step=10,
             # num_updates_per_epoch=1000,
@@ -97,7 +98,7 @@ sac_pso_sim = {
             target_update_period=1,
             policy_lr=3E-4,
             qf_lr=3E-4,
-            alpha=0.01,
+            # alpha=0.01,
             ),
         algo_params_pop=dict(
             # num_epochs=int(1),
@@ -113,7 +114,7 @@ sac_pso_sim = {
             target_update_period=1,
             policy_lr=3E-4,
             qf_lr=3E-4,
-            alpha=0.01,
+            # alpha=0.01,
             ),
         net_size=200,
         network_depth=3,

@@ -1,20 +1,19 @@
 import numpy as np
-import torch
 import rlkit.torch.pytorch_util as ptu
 import pyswarms as ps
 from .design_optimization import Design_Optimization
 
-class PSO_simulation(Design_Optimization):
 
+class PSO_simulation(Design_Optimization):
     def __init__(self, config, replay, env):
         self._config = config
         self._replay = replay
         self._env = env
 
         # TODO Make this independent of rl_algo config
-        self._episode_length = self._config['rl_algorithm_config']['algo_params']['num_steps_per_epoch']
+        # self._episode_length = self._config['rl_algorithm_config']['algo_params']['num_steps_per_epoch']
+        self._episode_length = 5
         self._reward_scale = self._config['rl_algorithm_config']['algo_params']['reward_scale']
-
 
     def optimize_design(self, design, q_network, policy_network):
         # Important: We reset the design of the environment. Previous design

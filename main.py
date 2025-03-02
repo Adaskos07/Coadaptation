@@ -4,8 +4,8 @@ import coadapt
 import experiment_configs as cfg
 import json
 
-def main(config):
 
+def main(config):
     # Create foldr in which to save results
     folder = config['data_folder']
     #generate random hash string - unique identifier if we start
@@ -24,7 +24,6 @@ def main(config):
 
     co = coadapt.Coadaptation(config)
     co.run()
-
 
 
 if __name__ == "__main__":

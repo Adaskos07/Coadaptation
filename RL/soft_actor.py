@@ -1,6 +1,5 @@
 from rlkit.torch.sac.policies import TanhGaussianPolicy
-# from rlkit.torch.sac.sac import SoftActorCritic
-from rlkit.torch.networks import FlattenMlp
+from rlkit.torch.networks import ConcatMlp
 import numpy as np
 from .rl_algorithm import RL_algorithm
 from rlkit.torch.sac.sac import SACTrainer as SoftActorCritic_rlkit
@@ -8,9 +7,9 @@ import rlkit.torch.pytorch_util as ptu
 import torch
 import utils
 
+
 # networks = {individual:, population:}
 class SoftActorCritic(RL_algorithm):
-
     def __init__(self, config, env, replay, networks):
         """ Bascally a wrapper class for SAC from rlkit.
 
@@ -20,7 +19,6 @@ class SoftActorCritic(RL_algorithm):
             replay: Replay buffer
             networks: dict containing two sub-dicts, 'individual' and 'population'
                 which contain the networks.
-
         """
         super().__init__(config, env, replay, networks)
 
@@ -159,22 +157,22 @@ class SoftActorCritic(RL_algorithm):
         net_size = config['rl_algorithm_config']['net_size']
         hidden_sizes = [net_size] * config['rl_algorithm_config']['network_depth']
         # hidden_sizes = [net_size, net_size, net_size]
-        qf1 = FlattenMlp(
+        qf1 = ConcatMlp(
             hidden_sizes=hidden_sizes,
             input_size=obs_dim + action_dim,
             output_size=1,
         ).to(device=ptu.device)
-        qf2 = FlattenMlp(
+        qf2 = ConcatMlp(
             hidden_sizes=hidden_sizes,
             input_size=obs_dim + action_dim,
             output_size=1,
         ).to(device=ptu.device)
-        qf1_target = FlattenMlp(
+        qf1_target = ConcatMlp(
             hidden_sizes=hidden_sizes,
             input_size=obs_dim + action_dim,
             output_size=1,
         ).to(device=ptu.device)
-        qf2_target = FlattenMlp(
+        qf2_target = ConcatMlp(
             hidden_sizes=hidden_sizes,
             input_size=obs_dim + action_dim,
             output_size=1,

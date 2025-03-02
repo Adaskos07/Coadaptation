@@ -4,8 +4,8 @@ import rlkit.torch.pytorch_util as ptu
 import pyswarms as ps
 from .design_optimization import Design_Optimization
 
-class PSO_batch(Design_Optimization):
 
+class PSO_batch(Design_Optimization):
     def __init__(self, config, replay, env):
         self._config = config
         self._replay = replay
@@ -15,7 +15,6 @@ class PSO_batch(Design_Optimization):
             self._state_batch_size = self._config['state_batch_size']
         else:
             self._state_batch_size = 32
-
 
     def optimize_design(self, design, q_network, policy_network):
         self._replay.set_mode('start')

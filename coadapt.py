@@ -10,6 +10,7 @@ import os
 import csv
 import torch
 
+
 def select_design_opt_alg(alg_name):
     """ Selects the design optimization method.
 
@@ -66,23 +67,20 @@ def select_rl_alg(rl_name):
     else:
         raise ValueError('RL method not fund.')
 
-class Coadaptation(object):
+
+class Coadaptation:
     """ Basic Co-Adaptaton class.
-
     """
-
     def __init__(self, config):
-        """
-        Args:
+        """Args:
             config: A config dictonary.
-
         """
-
         self._config = config
         utils.move_to_cuda(self._config)
 
         # TODO This should not depend on rl_algorithm_config in the future
-        self._episode_length = self._config['steps_per_episodes']
+        # self._episode_length = self._config['steps_per_episodes']
+        self._episode_length = 5
         self._reward_scale = 1.0 #self._config['rl_algorithm_config']['algo_params']['reward_scale']
 
         self._env_class = select_environment(self._config['env']['env_name'])
@@ -160,7 +158,6 @@ class Coadaptation(object):
         exploration strategy/mechanism and the policy.
         The data, i.e. state-action-reward-nextState, is stored in the replay
         buffer.
-
         """
         state = self._env.reset()
         nmbr_of_steps = 0
@@ -198,7 +195,6 @@ class Coadaptation(object):
         Evaluates the current policy in the environment by unrolling a single
         episode in the environment.
         The achieved cumulative reward is logged.
-
         """
         state = self._env.reset()
         done = False
@@ -366,7 +362,6 @@ class Coadaptation(object):
         Args:
             iterations: Integer stating how many training iterations/episodes
                 to use per design.
-
         """
         self._data_design_type = 'Initial'
         for params in self._env.init_sim_params:

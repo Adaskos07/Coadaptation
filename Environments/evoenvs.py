@@ -4,7 +4,8 @@ from .pybullet_evo.gym_locomotion_envs import HalfCheetahBulletEnv
 import copy
 from utils import BestEpisodesVideoRecorder
 
-class HalfCheetahEnv(object):
+
+class HalfCheetahEnv:
     def __init__(self, config = {'env' : {'render' : True, 'record_video': False}}):
         self._config = config
         self._render = self._config['env']['render']
@@ -45,7 +46,6 @@ class HalfCheetahEnv(object):
             self._video_recorder.step(env=self._env, state=state, reward=reward, done=done)
 
         return state, reward, False, info
-
 
     def reset(self):
         state = self._env.reset()

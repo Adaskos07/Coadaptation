@@ -5,6 +5,7 @@ from shutil import copyfile, move
 import time
 import numpy as np
 
+
 def move_to_cpu():
     """ Set device to cpu for torch.
     """
@@ -73,7 +74,8 @@ def copy_network(network_to, network_from, config, force_cpu=False):
     network_to.eval()
     return network_to
 
-class BestEpisodesVideoRecorder(object):
+
+class BestEpisodesVideoRecorder:
     def __init__(self, path=None, max_videos=1):
         self._vid_path = '/tmp/videos' if path is None else path
 
@@ -98,7 +100,6 @@ class BestEpisodesVideoRecorder(object):
         self._episode_counter = 0
         self._episodic_rewards = [-float('inf')] * self._keep_n_best
         self._episodic_reset()
-
 
     def increase_folder_counter(self):
         self._current_vid_path = os.path.join(self._vid_path, str(self._folder_counter))
@@ -140,7 +141,6 @@ class BestEpisodesVideoRecorder(object):
                     pass
                 self._episodic_rewards = self._episodic_rewards[1:] + [self._current_episode_reward]
                 copyfile(os.path.join(self._current_vid_path, 'current_video.avi'), os.path.join(self._current_vid_path, 'video_{}.avi'.format(idx)))
-
 
     def reset(self, env, state, reward, done):
         # final processing of data from previous episode

@@ -2,6 +2,7 @@ from rlkit.data_management.replay_buffer import ReplayBuffer
 from rlkit.data_management.env_replay_buffer import EnvReplayBuffer
 import numpy as np
 
+
 class EvoReplayLocalGlobalStart(ReplayBuffer):
     def __init__(self, env, max_replay_buffer_size_species, max_replay_buffer_size_population):
         self._species_buffer = EnvReplayBuffer(env=env, max_replay_buffer_size=max_replay_buffer_size_species)
