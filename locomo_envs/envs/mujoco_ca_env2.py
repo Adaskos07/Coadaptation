@@ -1,7 +1,5 @@
 from typing import Tuple, Optional
-
 import mujoco
-
 from gymnasium.envs.mujoco.mujoco_env import MujocoEnv
 
 
@@ -54,6 +52,7 @@ class MujocoCAEnv(MujocoEnv):
         self.init_qpos = self.data.qpos.ravel().copy()
         self.init_qvel = self.data.qvel.ravel().copy()
 
+        # renderer might throw segfault on wayland when running .close()
         self.mujoco_renderer.model = self.model
         self.mujoco_renderer.data = self.data
         self.mujoco_renderer._get_viewer(self.render_mode)

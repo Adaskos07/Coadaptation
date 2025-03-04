@@ -29,6 +29,8 @@ class HalfCheetahCAEnv(HalfCheetahEnv):
                          exclude_current_positions_from_observation,
                          **kwargs)
 
+        self.design = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+
     def change_spec(self, options):
         if options is None:
             return False
@@ -36,10 +38,12 @@ class HalfCheetahCAEnv(HalfCheetahEnv):
         height = 1.0
         bth_r, bsh_r, bfo_r = 1.0, 1.0, 1.0
         fth_r, fsh_r, ffo_r = 1.0, 1.0, 1.0
-        if options['random']:
-            bth_r, bsh_r, bfo_r, fth_r, fsh_r, ffo_r = np.random.uniform(low=0.5, high=1.5, size=6)
-        elif options['design']:
-            bth_r, bsh_r, bfo_r, fth_r, fsh_r, ffo_r = options['design']
+        if options.get('random'):
+            self._design = np.random.uniform(low=0.5, high=1.5, size=6)
+            bth_r, bsh_r, bfo_r, fth_r, fsh_r, ffo_r = self._design
+        elif options.get('design'):
+            self._design = options['design']
+            bth_r, bsh_r, bfo_r, fth_r, fsh_r, ffo_r = self._design
             height = max(.145 * bth_r + .15 * bsh_r + .094 * bfo_r, .133 * fth_r + .106 * fsh_r +  .07 * ffo_r)
             height *= 2.0 + 0.01
         else:

@@ -1,14 +1,16 @@
+import os
+import time
+import csv
+
+import numpy as np
+import torch
+
+import utils
+from Environments import evoenvs as evoenvs
 from RL.soft_actor import SoftActorCritic
+from RL.evoreplay import EvoReplayLocalGlobalStart
 from DO.pso_batch import PSO_batch
 from DO.pso_sim import PSO_simulation
-from Environments import evoenvs as evoenvs
-import utils
-import time
-from RL.evoreplay import EvoReplayLocalGlobalStart
-import numpy as np
-import os
-import csv
-import torch
 
 
 def select_design_opt_alg(alg_name):
@@ -318,7 +320,6 @@ class Coadaptation:
             exploration_strategy: String which describes which
                 design exploration strategy to use. Is not used at the moment,
                 i.e. only the (uniform) random exploration strategy is used.
-
         """
         self.initialize_episode()
         # TODO fix the following

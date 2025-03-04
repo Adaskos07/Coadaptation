@@ -1,11 +1,13 @@
-from pybullet_envs.scene_stadium import SinglePlayerStadiumScene
-from pybullet_envs.env_bases import MJCFBaseBulletEnv
-import numpy as np
-import pybullet
-from .robot_locomotors import  HalfCheetah
 import os, inspect
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-from gym import spaces
+
+import numpy as np
+from gymnasium import spaces
+import pybullet
+from pybullet_envs.scene_stadium import SinglePlayerStadiumScene
+from pybullet_envs.env_bases import MJCFBaseBulletEnv
+
+from .robot_locomotors import  HalfCheetah
 
 
 class WalkerBaseBulletEnv(MJCFBaseBulletEnv):

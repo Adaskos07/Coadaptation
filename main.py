@@ -1,8 +1,9 @@
 import os, sys, time
 import hashlib
+import json
+
 import coadapt
 import experiment_configs as cfg
-import json
 
 
 def main(config):

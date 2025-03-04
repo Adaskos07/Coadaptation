@@ -1,5 +1,5 @@
 import pybullet
-import gym, gym.spaces, gym.utils
+import gymnasium as gym
 import numpy as np
 import os, inspect
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))

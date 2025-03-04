@@ -83,8 +83,10 @@ class BestEpisodesVideoRecorder:
         self._keep_n_best = max(max_videos, 1)
         self._record_evy_n_episodes = 5
 
-        self._frame_width = 200
-        self._frame_height = 200
+        # self._frame_width = 200
+        # self._frame_height = 200
+        self._frame_width = 480
+        self._frame_height = 480
         self._fps_per_frame = 0
 
         self.increase_folder_counter()
@@ -109,9 +111,10 @@ class BestEpisodesVideoRecorder:
     def step(self, env, state, reward, done):
         if self._episode_counter % self._record_evy_n_episodes == 0:
             self._current_episode_reward += reward
-            env.camera_adjust()
-            frame = env.render_camera_image((self._frame_width, self._frame_height))
-            frame = frame * 255
+            # env.camera_adjust()
+            # frame = env.render_camera_image((self._frame_width, self._frame_height))
+            frame = env.render()
+            # frame = frame * 255
             frame = frame.astype(np.uint8)
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             self._vid_writer.write(frame)
@@ -145,7 +148,7 @@ class BestEpisodesVideoRecorder:
     def reset(self, env, state, reward, done):
         # final processing of data from previous episode
         if self._episode_counter % self._record_evy_n_episodes == 0:
-            env.camera_adjust()
+            # env.camera_adjust()
             self._vid_writer.release()
             if not os.path.exists(self._current_vid_path):
                 os.makedirs(self._current_vid_path)
@@ -158,8 +161,9 @@ class BestEpisodesVideoRecorder:
         # set up everything for this episode if we record
         if self._episode_counter % self._record_evy_n_episodes == 0:
             self._create_vid_stream()
-            frame = env.render_camera_image((self._frame_width, self._frame_height))
-            frame = frame * 255
+            # frame = env.render_camera_image((self._frame_width, self._frame_height))
+            frame = env.render()
+            # frame = frame * 255
             frame = frame.astype(np.uint8)
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             self._vid_writer.write(frame)
