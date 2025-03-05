@@ -63,26 +63,26 @@ sac_pso_batch = {
         env_name='HalfCheetah',             # Name of environment
         render=False,                       # Use True if you want to visualize/render the environment
         record_video=False,                  # Use True if you want to record videos
-    ),
-    }
+    )
+}
 
 sac_pso_sim = {
-    'name' : 'Experiment 2: PSO using Simulations',
-    'data_folder' : 'data_exp_sac_pso_sim',
-    'nmbr_random_designs' : 0,
-    'iterations_init' : 300,
+    'name': 'Experiment 2: PSO using Simulations',
+    'data_folder': 'data_exp_sac_pso_sim',
+    'nmbr_random_designs': 0,
+    'iterations_init': 300,
     'iterations_random': 100,
-    'iterations' : 100,
-    'design_cycles' : 55,
-    'state_batch_size' : 32,
-    'initial_episodes' : 3,
-    'use_gpu' : True,
+    'iterations': 100,
+    'design_cycles': 55,
+    'state_batch_size': 32,
+    'initial_episodes': 3,
+    'use_gpu': True,
     'use_cpu_for_rollout': False,
     'cuda_device': 0,
     'exploration_strategy': 'random',
     'design_optim_method' : 'pso_sim',
-    'save_networks' : True,
-    'rl_method' : 'SoftActorCritic',
+    'save_networks': True,
+    'rl_method': 'SoftActorCritic',
     'rl_algorithm_config' : dict(
         algo_params=dict(
             # num_epochs=int(1),
@@ -123,14 +123,14 @@ sac_pso_sim = {
         pop_updates=250,
         batch_size=256,
     ),
-    'env' : dict(
+    'env': dict(
         env_name='HalfCheetah',
         render=True,
         record_video=False,
-    ),
-    }
+    )
+}
 
 config_dict = {
     'sac_pso_batch' : sac_pso_batch,
     'sac_pso_sim' : sac_pso_sim,
-    }
+}

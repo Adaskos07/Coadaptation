@@ -6,7 +6,8 @@ import numpy as np
 import torch
 
 import utils
-from Environments import evoenvs as evoenvs
+# from Environments import evoenvs as evoenvs
+from Environments import coadapt_env
 from RL.soft_actor import SoftActorCritic
 from RL.evoreplay import EvoReplayLocalGlobalStart
 from DO.pso_batch import PSO_batch
@@ -32,25 +33,6 @@ def select_design_opt_alg(alg_name):
         return PSO_simulation
     else:
         raise ValueError("Design Optimization method not found.")
-
-def select_environment(env_name):
-    """ Selects an environment.
-
-    Args:
-        env_name: Name (string) of the environment on which the experiment is to
-            be executed. Can be `HalfCheetah`.
-
-    Returns:
-        The class of an environment
-
-    Raises:
-        ValueError: If the string env_name is unknown.
-
-    """
-    if env_name == 'HalfCheetah':
-        return evoenvs.HalfCheetahEnv
-    else:
-        raise ValueError("Environment class not found.")
 
 def select_rl_alg(rl_name):
     """ Selectes the reinforcement learning method.
@@ -85,8 +67,7 @@ class Coadaptation:
         self._episode_length = 5
         self._reward_scale = 1.0 #self._config['rl_algorithm_config']['algo_params']['reward_scale']
 
-        self._env_class = select_environment(self._config['env']['env_name'])
-        self._env = evoenvs.HalfCheetahEnv(config=self._config)
+        self._env = coadapt_env.CoadaptEnv(config=self._config)
 
         self._replay = EvoReplayLocalGlobalStart(self._env,
             max_replay_buffer_size_species=int(1e6),

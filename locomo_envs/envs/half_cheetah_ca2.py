@@ -30,6 +30,8 @@ class HalfCheetahCAEnv(HalfCheetahEnv):
                          **kwargs)
 
         self.design = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+        self.bounds = (0.5, 1.5)
+        # self.bounds = (0.8, 2)
 
     def change_spec(self, options):
         if options is None:
@@ -39,7 +41,7 @@ class HalfCheetahCAEnv(HalfCheetahEnv):
         bth_r, bsh_r, bfo_r = 1.0, 1.0, 1.0
         fth_r, fsh_r, ffo_r = 1.0, 1.0, 1.0
         if options.get('random'):
-            self._design = np.random.uniform(low=0.5, high=1.5, size=6)
+            self._design = np.random.uniform(low=self.bounds[0], high=self.bounds[1], size=6)
             bth_r, bsh_r, bfo_r, fth_r, fsh_r, ffo_r = self._design
         elif options.get('design'):
             self._design = options['design']
