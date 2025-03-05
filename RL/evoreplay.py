@@ -1,6 +1,7 @@
+import numpy as np
+
 from rlkit.data_management.replay_buffer import ReplayBuffer
 from rlkit.data_management.env_replay_buffer import EnvReplayBuffer
-import numpy as np
 
 
 class EvoReplayLocalGlobalStart(ReplayBuffer):
@@ -54,7 +55,7 @@ class EvoReplayLocalGlobalStart(ReplayBuffer):
         elif  self._mode == "population":
             return self._population_buffer.num_steps_can_sample(**kwargs)
         else:
-            pass
+            raise ValueError('Mode not specified')
 
     def random_batch(self, batch_size):
         """
@@ -76,18 +77,15 @@ class EvoReplayLocalGlobalStart(ReplayBuffer):
         elif self._mode == "start":
             return self._init_state_buffer.random_batch(batch_size)
         else:
-            pass
+            raise ValueError('Mode not specified')
 
     def set_mode(self, mode):
-        if mode == "species":
-            self._mode = mode
-        elif mode == "population":
-            self._mode = mode
-        elif mode == "start":
+        if mode in ("species", "population", "start"):
             self._mode = mode
         else:
-            print("No known mode :(")
+            raise ValueError('No known mode :(')
+            # print("No known mode :(")
 
     def reset_species_buffer(self):
-        self._species_buffer = EnvReplayBuffer(env = self._env, max_replay_buffer_size=self._max_replay_buffer_size_species)
+        self._species_buffer = EnvReplayBuffer(env=self._env, max_replay_buffer_size=self._max_replay_buffer_size_species)
         self._ep_counter = 0

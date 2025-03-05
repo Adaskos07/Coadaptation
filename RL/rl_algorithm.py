@@ -1,7 +1,7 @@
 import rlkit.torch.pytorch_util as ptu
 
 
-class RL_algorithm(object):
+class RL_algorithm:
     def __init__(self, config, env, replay, networks):
         self._config = config
         self.file_str = config['data_folder_experiment']

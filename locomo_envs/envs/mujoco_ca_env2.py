@@ -81,3 +81,7 @@ class MujocoCAEnv(MujocoEnv):
         Method for changing underlying mujoco MjSpec object named self.dspec
         """
         raise NotImplementedError
+
+    @property 
+    def design(self):
+        raise NotImplementedError

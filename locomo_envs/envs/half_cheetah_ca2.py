@@ -29,9 +29,13 @@ class HalfCheetahCAEnv(HalfCheetahEnv):
                          exclude_current_positions_from_observation,
                          **kwargs)
 
-        self.design = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+        self._design = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
         self.bounds = (0.5, 1.5)
         # self.bounds = (0.8, 2)
+
+    @property
+    def design(self):
+        return self._design
 
     def change_spec(self, options):
         if options is None:

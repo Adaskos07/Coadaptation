@@ -1,6 +1,7 @@
 import numpy as np
-import rlkit.torch.pytorch_util as ptu
 import pyswarms as ps
+
+import rlkit.torch.pytorch_util as ptu
 from .design_optimization import Design_Optimization
 
 

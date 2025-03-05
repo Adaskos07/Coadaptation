@@ -7,7 +7,7 @@ import torch
 
 import utils
 # from Environments import evoenvs as evoenvs
-from Environments import coadapt_env
+from coadapt_env import CoadaptEnv
 from RL.soft_actor import SoftActorCritic
 from RL.evoreplay import EvoReplayLocalGlobalStart
 from DO.pso_batch import PSO_batch
@@ -56,9 +56,6 @@ class Coadaptation:
     """ Basic Co-Adaptaton class.
     """
     def __init__(self, config):
-        """Args:
-            config: A config dictonary.
-        """
         self._config = config
         utils.move_to_cuda(self._config)
 
@@ -67,7 +64,7 @@ class Coadaptation:
         self._episode_length = 5
         self._reward_scale = 1.0 #self._config['rl_algorithm_config']['algo_params']['reward_scale']
 
-        self._env = coadapt_env.CoadaptEnv(config=self._config)
+        self._env = CoadaptEnv(config=self._config)
 
         self._replay = EvoReplayLocalGlobalStart(self._env,
             max_replay_buffer_size_species=int(1e6),
