@@ -85,3 +85,7 @@ class MujocoCAEnv(MujocoEnv):
     @property 
     def design(self):
         raise NotImplementedError
+
+    @property 
+    def design_size(self):
+        raise NotImplementedError

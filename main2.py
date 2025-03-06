@@ -16,13 +16,10 @@ ds = [
     [0.85, 1.54, 0.97, 1.38, 1.10, 1.49],
 ]
 
-# env = gym.make('HalfCheetahCA-v0', ctrl_cost_weight=0.1, render_mode='rgb_array', xml_file='./n_half_cheetah.xml')
-# env = gym.make('HalfCheetahCA-v0', ctrl_cost_weight=0.1, render_mode='human', xml_file='./half_cheetah.xml') 
 env = gym.make('HalfCheetahCA-v0', render_mode='human') 
 # env = gym.make('HalfCheetahCA-v0', render_mode='rgb_array') 
 # env = gym.make('HalfCheetah-v5', render_mode='rgb_array') 
 # env = gym.make('Walker2d-v5', render_mode='human') 
-# env = gym.make('HalfCheetahCA-v0', render_mode='rgb_array', xml_file='./half_cheetah.xml') 
 # print(type(env.unwrapped.design()))
 # observation, info = env.reset(options={'design': ds[2], 'random': False})
 # observation, info = env.reset()
@@ -38,6 +35,10 @@ env = gym.make('HalfCheetahCA-v0', render_mode='human')
 
 observation, info = env.reset(options={'design': ds[1], 'random': False})
 print(env.unwrapped.design)
+print(env.unwrapped.design_size)
+
+
+exit()
 # state = np.append(observation, np.array(env.unwrapped.design))
 # recorder.reset(env, state, 0, False)
 for i in range(200):

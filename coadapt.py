@@ -6,7 +6,7 @@ import numpy as np
 import torch
 
 import utils
-# from Environments import evoenvs as evoenvs
+
 from coadapt_env import CoadaptEnv
 from RL.soft_actor import SoftActorCritic
 from RL.evoreplay import EvoReplayLocalGlobalStart
@@ -53,16 +53,14 @@ def select_rl_alg(rl_name):
 
 
 class Coadaptation:
-    """ Basic Co-Adaptaton class.
-    """
+    """ Co-Adaptaton algorithm class."""
+
     def __init__(self, config):
         self._config = config
         utils.move_to_cuda(self._config)
 
-        # TODO This should not depend on rl_algorithm_config in the future
-        # self._episode_length = self._config['steps_per_episodes']
-        self._episode_length = 5
-        self._reward_scale = 1.0 #self._config['rl_algorithm_config']['algo_params']['reward_scale']
+        self._episode_length = self._config['steps_per_episodes']
+        self._reward_scale = self._config['reward_scale']
 
         self._env = CoadaptEnv(config=self._config)
 
@@ -106,7 +104,6 @@ class Coadaptation:
 
         self._data_rewards = []
         self._episode_counter = 0
-
 
     def single_iteration(self):
         """ A single iteration.
@@ -163,8 +160,9 @@ class Coadaptation:
             reward = reward * self._reward_scale
             terminal = np.array([done])
             reward = np.array([reward])
-            self._replay.add_sample(observation=state, action=action, reward=reward, next_observation=new_state,
-                           terminal=terminal)
+            self._replay.add_sample(observation=state, action=action,
+                                    reward=reward, next_observation=new_state,
+                                    terminal=terminal)
             state = new_state
         self._replay.terminate_episode()
         utils.move_to_cuda(self._config)
@@ -259,10 +257,8 @@ class Coadaptation:
         file_path = self._config['data_folder_experiment']
         current_design = self._env.get_current_design()
 
-        with open(
-            os.path.join(file_path,
-                'data_design_{}.csv'.format(self._design_counter)
-                ), 'w') as fd:
+        with open(os.path.join(file_path,'data_design_{}.csv'.format(self._design_counter)),
+                  'w') as fd:
             cwriter = csv.writer(fd)
             cwriter.writerow(['Design Type:', self._data_design_type])
             cwriter.writerow(current_design)

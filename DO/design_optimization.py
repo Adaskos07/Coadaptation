@@ -1,4 +1,4 @@
-class Design_Optimization:
+class DesignOptimization:
     def __init__(self):
         pass
 

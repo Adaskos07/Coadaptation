@@ -1,10 +1,12 @@
+import numpy as np
+import torch
+
 from rlkit.torch.sac.policies import TanhGaussianPolicy
 from rlkit.torch.networks import ConcatMlp
-import numpy as np
-from .rl_algorithm import RL_algorithm
-from rlkit.torch.sac.sac import SACTrainer as SoftActorCritic_rlkit
+from rlkit.torch.sac.sac import SACTrainer
 import rlkit.torch.pytorch_util as ptu
-import torch
+
+from .rl_algorithm import RL_algorithm
 import utils
 
 
@@ -14,7 +16,7 @@ class SoftActorCritic(RL_algorithm):
         """ Bascally a wrapper class for SAC from rlkit.
 
         Args:
-            config: Configuration dictonary
+            config: Configuration dictionary
             env: Environment
             replay: Replay buffer
             networks: dict containing two sub-dicts, 'individual' and 'population'
@@ -41,7 +43,7 @@ class SoftActorCritic(RL_algorithm):
         self._nmbr_indiv_updates = config['rl_algorithm_config']['indiv_updates']
         self._nmbr_pop_updates = config['rl_algorithm_config']['pop_updates']
 
-        self._algorithm_ind = SoftActorCritic_rlkit(
+        self._algorithm_ind = SACTrainer(
             env=self._env,
             policy=self._ind_policy,
             qf1=self._ind_qf1,
@@ -52,7 +54,7 @@ class SoftActorCritic(RL_algorithm):
             **self._variant_spec
         )
 
-        self._algorithm_pop = SoftActorCritic_rlkit(
+        self._algorithm_pop = SACTrainer(
             env=self._env,
             policy=self._pop_policy,
             qf1=self._pop_qf1,
@@ -72,7 +74,7 @@ class SoftActorCritic(RL_algorithm):
         In this case basically creates a fresh instance of SAC for the
         individual networks and copies the values of the target network.
         """
-        self._algorithm_ind = SoftActorCritic_rlkit(
+        self._algorithm_ind = SACTrainer(
             env=self._env,
             policy=self._ind_policy,
             qf1=self._ind_qf1,
@@ -83,9 +85,9 @@ class SoftActorCritic(RL_algorithm):
             # alt_alpha = self._alt_alpha,
             **self._variant_spec
         )
-        if self._config['rl_algorithm_config']['copy_from_gobal']:
+        if self._config['rl_algorithm_config']['copy_from_global']:
             utils.copy_pop_to_ind(networks_pop=self._networks['population'], networks_ind=self._networks['individual'])
-        # We have only to do this becasue the version of rlkit which we use
+        # We have only to do this because the version of rlkit which we use
         # creates internally a target network
         # vf_dict = self._algorithm_pop.target_vf.state_dict()
         # self._algorithm_ind.target_vf.load_state_dict(vf_dict)
@@ -156,7 +158,6 @@ class SoftActorCritic(RL_algorithm):
         action_dim = int(np.prod(env.action_space.shape))
         net_size = config['rl_algorithm_config']['net_size']
         hidden_sizes = [net_size] * config['rl_algorithm_config']['network_depth']
-        # hidden_sizes = [net_size, net_size, net_size]
         qf1 = ConcatMlp(
             hidden_sizes=hidden_sizes,
             input_size=obs_dim + action_dim,

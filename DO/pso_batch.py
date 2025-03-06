@@ -4,10 +4,10 @@ import pyswarms as ps
 
 import rlkit.torch.pytorch_util as ptu
 
-from .design_optimization import Design_Optimization
+from .design_optimization import DesignOptimization
 
 
-class PSO_batch(Design_Optimization):
+class PSO_batch(DesignOptimization):
     def __init__(self, config, replay, env):
         self._config = config
         self._replay = replay

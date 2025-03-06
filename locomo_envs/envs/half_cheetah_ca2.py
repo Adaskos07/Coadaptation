@@ -36,6 +36,10 @@ class HalfCheetahCAEnv(HalfCheetahEnv):
     @property
     def design(self):
         return self._design
+    
+    @property
+    def design_size(self):
+        return len(self._design)
 
     def change_spec(self, options):
         if options is None:

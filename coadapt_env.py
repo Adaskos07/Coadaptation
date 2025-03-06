@@ -1,32 +1,30 @@
 import copy
+
 from gymnasium.spaces import Box
 import gymnasium as gym
 import numpy as np
 
 import locomo_envs
-
 from utils import BestEpisodesVideoRecorder
 
 
-
 class CoadaptEnv:
-    """Wraps chosen environement with config redo"""
+    """Wraps chosen environment so it can work with CoAdapation algorithm"""
     def __init__(self, config):
         self._config = config
         self._render = self._config['env']['render']
         self._record_video = self._config['env']['record_video']
 
-        self._design_size = len(self._env.unwrapped.design)
-
-        self._config_numpy = np.array(self._env.unwrapped.design)
-        self.design_params_bounds = [(0.8, 2.0)] * self._design_size
         try:
             env_name = self._config['env']['env_name']
         except KeyError as e:
             raise KeyError("Missing 'env_name' config parameter!")
 
-
         self._env = gym.make(env_name, render_mode='rgb_array')
+
+        self._design_size = self._env.unwrapped.design_size
+        self._config_numpy = np.array(self._env.unwrapped.design)
+        self.design_params_bounds = [(0.8, 2.0)] * self._design_size
 
         # self.init_sim_params = [
         #     [1.0] * 6,
@@ -35,7 +33,9 @@ class CoadaptEnv:
         #     [1.08, 1.18, 1.39, 1.76 , 1.85, 0.92],
         #     [0.85, 1.54, 0.97, 1.38, 1.10, 1.49],
         # ]
-        self.observation_space = Box(-np.inf, np.inf, shape=[self._env.observation_space.shape[0] + self._design_size], dtype=np.float32)#env.observation_space
+        self.observation_space = Box(-np.inf, np.inf,
+                                     shape=[self._env.observation_space.shape[0] + self._design_size],
+                                     dtype=np.float32) #env.observation_space
         self.action_space = self._env.action_space
         self._initial_state = self._env.reset()
 
