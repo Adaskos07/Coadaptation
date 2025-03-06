@@ -1,9 +1,11 @@
-import rlkit.torch.pytorch_util as ptu
-import cv2
 import os
 from shutil import copyfile, move
 import time
+
+import cv2
 import numpy as np
+
+import rlkit.torch.pytorch_util as ptu
 
 
 def move_to_cpu():

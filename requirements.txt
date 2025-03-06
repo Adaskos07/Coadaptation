@@ -1,5 +1,5 @@
 gtimer
-gym
+gymnasium
 joblib
 numpy
 pickleshare
