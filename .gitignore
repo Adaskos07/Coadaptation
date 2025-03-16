@@ -108,3 +108,6 @@ data_*/
 data_*
 .python-version
 rlkit/
+out/
+test_job.sh
+run_coadapt_test.sh

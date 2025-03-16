@@ -10,7 +10,8 @@ class PSO_simulation(DesignOptimization):
         self._replay = replay
         self._env = env
 
-        self._episode_length = self._config['rl_algorithm_config']['algo_params']['num_steps_per_epoch']
+        # self._episode_length = self._config['rl_algorithm_config']['algo_params']['num_steps_per_epoch']
+        self._episode_length = self._config['num_steps_per_epoch']
         self._reward_scale = self._config['reward_scale']
 
     def optimize_design(self, design, q_network, policy_network):
@@ -25,7 +26,8 @@ class PSO_simulation(DesignOptimization):
             nmbr_of_steps = 0
             while not(done) and nmbr_of_steps <= self._episode_length:
                 nmbr_of_steps += 1
-                action, _ = policy_network.get_action(state, deterministic=True)
+                # action, _ = policy_network.get_action(state, deterministic=True)
+                action, _ = policy_network.get_action(state)
                 new_state, reward, done, info = self._env.step(action)
                 reward = reward * self._reward_scale
                 reward_episode.append(float(reward))

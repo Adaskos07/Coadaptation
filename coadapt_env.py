@@ -26,13 +26,13 @@ class CoadaptEnv:
         self._config_numpy = np.array(self._env.unwrapped.design)
         self.design_params_bounds = [(0.8, 2.0)] * self._design_size
 
-        # self.init_sim_params = [
-        #     [1.0] * 6,
-        #     [1.41, 0.96, 1.97, 1.73, 1.97, 1.17],
-        #     [1.52, 1.07, 1.11, 1.97, 1.51, 0.99],
-        #     [1.08, 1.18, 1.39, 1.76 , 1.85, 0.92],
-        #     [0.85, 1.54, 0.97, 1.38, 1.10, 1.49],
-        # ]
+        self.init_sim_params = [
+            [1.0] * 6,
+            [1.41, 0.96, 1.97, 1.73, 1.97, 1.17],
+            [1.52, 1.07, 1.11, 1.97, 1.51, 0.99],
+            [1.08, 1.18, 1.39, 1.76 , 1.85, 0.92],
+            [0.85, 1.54, 0.97, 1.38, 1.10, 1.49],
+        ]
         self.observation_space = Box(-np.inf, np.inf,
                                      shape=[self._env.observation_space.shape[0] + self._design_size],
                                      dtype=np.float32) #env.observation_space
@@ -51,7 +51,9 @@ class CoadaptEnv:
 
     def step(self, action):
         info = {}
-        state, reward, done, _ = self._env.step(action)
+        state, reward, terminated, truncated, _ = self._env.step(action)
+        done = terminated or truncated
+        # state = state[0]
         state = np.append(state, self._config_numpy)
         info['orig_action_cost'] = 0.1 * np.mean(np.square(action))
         info['orig_reward'] = reward
@@ -62,7 +64,7 @@ class CoadaptEnv:
         return state, reward, False, info
 
     def reset(self):
-        state = self._env.reset()
+        state, _ = self._env.reset()
         self._initial_state = state
         state = np.append(state, self._config_numpy)
 

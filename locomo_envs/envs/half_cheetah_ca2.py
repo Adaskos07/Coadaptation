@@ -40,6 +40,17 @@ class HalfCheetahCAEnv(HalfCheetahEnv):
     @property
     def design_size(self):
         return len(self._design)
+    
+    # def _get_obs(self):
+    #     position = self.data.qpos.flatten()
+    #     velocity = self.data.qvel.flatten()
+
+    #     if self._exclude_current_positions_from_observation:
+    #         position = position[1:]
+
+    #     # observation = np.concatenate((position, velocity)).ravel()
+    #     observation = position.ravel()
+    #     return observation
 
     def change_spec(self, options):
         if options is None:
@@ -51,7 +62,8 @@ class HalfCheetahCAEnv(HalfCheetahEnv):
         if options.get('random'):
             self._design = np.random.uniform(low=self.bounds[0], high=self.bounds[1], size=6)
             bth_r, bsh_r, bfo_r, fth_r, fsh_r, ffo_r = self._design
-        elif options.get('design'):
+        # elif options.get('design'):
+        elif options.get('design') is not None:
             self._design = options['design']
             bth_r, bsh_r, bfo_r, fth_r, fsh_r, ffo_r = self._design
             height = max(.145 * bth_r + .15 * bsh_r + .094 * bfo_r, .133 * fth_r + .106 * fsh_r +  .07 * ffo_r)
