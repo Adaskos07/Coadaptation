@@ -27,8 +27,10 @@ class PSO_simulation(DesignOptimization):
             while not(done) and nmbr_of_steps <= self._episode_length:
                 nmbr_of_steps += 1
                 # action, _ = policy_network.get_action(state, deterministic=True)
-                action, _ = policy_network.get_action(state)
-                new_state, reward, done, info = self._env.step(action)
+                action_dist, _ = policy_network.get_action(state)
+                action = action_dist.mean # makes it deterministic
+                new_state, reward, truncated, terminated, _ = self._env.step(action)
+                done = truncated or terminated
                 reward = reward * self._reward_scale
                 reward_episode.append(float(reward))
                 state = new_state

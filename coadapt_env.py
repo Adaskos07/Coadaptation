@@ -61,17 +61,18 @@ class CoadaptEnv:
         if self._record_video:
             self._video_recorder.step(env=self._env, state=state, reward=reward, done=done)
 
-        return state, reward, False, info
+        # return state, reward, False, False, info
+        return state, reward, False, False, info
 
     def reset(self):
-        state, _ = self._env.reset()
+        state, info = self._env.reset()
         self._initial_state = state
         state = np.append(state, self._config_numpy)
 
         if self._record_video:
             self._video_recorder.reset(env=self._env, state=state, reward=0, done=False)
 
-        return state
+        return state, info
 
     def set_new_design(self, vec):
         self._env.reset(options={'design': vec})

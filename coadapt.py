@@ -136,7 +136,7 @@ class Coadaptation:
         The data, i.e. state-action-reward-nextState, is stored in the replay
         buffer.
         """
-        state = self._env.reset()
+        state, _ = self._env.reset()
         nmbr_of_steps = 0
         done = False
 
@@ -155,7 +155,9 @@ class Coadaptation:
         while not(done) and nmbr_of_steps <= self._episode_length:
             nmbr_of_steps += 1
             action, _ = self._policy_cpu.get_action(state)
-            new_state, reward, done, info = self._env.step(action)
+            # new_state, reward, done, info = self._env.step(action)
+            new_state, reward, truncated, terminated, _ = self._env.step(action)
+            done = truncated or terminated
             # TODO this has to be fixed _variant_spec
             reward = reward * self._reward_scale
             terminal = np.array([done])
@@ -174,7 +176,7 @@ class Coadaptation:
         episode in the environment.
         The achieved cumulative reward is logged.
         """
-        state = self._env.reset()
+        state, _ = self._env.reset()
         done = False
         reward_ep = 0.0
         reward_original = 0.0
@@ -196,8 +198,12 @@ class Coadaptation:
         while not(done) and nmbr_of_steps <= self._episode_length:
             nmbr_of_steps += 1
             # action, _ = self._policy_cpu.get_action(state, deterministic=True)
-            action, _ = self._policy_cpu.get_action(state)
-            new_state, reward, done, info = self._env.step(action)
+            action_dist, _ = self._policy_cpu.get_action(state)
+            # action = action_dist.mean # makes it deterministic
+            # print(action_dist)
+            action = action_dist
+            new_state, reward, truncated, terminated, info = self._env.step(action)
+            done = truncated or terminated
             action_cost += info['orig_action_cost']
             reward_ep += float(reward)
             reward_original += float(info['orig_reward'])
@@ -298,7 +304,7 @@ class Coadaptation:
         """
         self.initialize_episode()
         # TODO fix the following
-        initial_state = self._env._env.reset()
+        initial_state, _ = self._env._env.reset()
 
         self._data_design_type = 'Optimized'
 

@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 
-from rlkit.torch.sac.policies import TanhGaussianPolicy
+from rlkit.torch.sac.policies import TanhGaussianPolicy, MakeDeterministic
 from rlkit.torch.networks import ConcatMlp
 from rlkit.torch.sac.sac import SACTrainer
 import rlkit.torch.pytorch_util as ptu

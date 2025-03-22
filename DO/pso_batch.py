@@ -46,7 +46,9 @@ class PSO_batch(DesignOptimization):
                     state_batch = initial_state.copy()
                     state_batch[:,design_idxs] = x
                     network_input = torch.from_numpy(state_batch).to(device=ptu.device, dtype=torch.float32)
-                    action, _, _, _, _, _, _, _, = policy_network(network_input, deterministic=True)
+                    # action, _, _, _, _, _, _, _, = policy_network(network_input, deterministic=True)
+                    action_dist = policy_network(network_input)
+                    action = action_dist.mean # makes it deterministic
                     output = q_network(network_input, action)
                     #output = self._vf_pop.forward(input)
                     loss = -output.mean().sum()
