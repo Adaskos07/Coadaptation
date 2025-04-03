@@ -10,8 +10,7 @@ import utils
 from coadapt_env import CoadaptEnv
 from RL.soft_actor import SoftActorCritic
 from RL.evoreplay import EvoReplayLocalGlobalStart
-from DO.pso_batch import PSO_batch
-from DO.pso_sim import PSO_simulation
+from DO import PSO_batch, PSO_batch_sp, PSO_simulation
 
 
 def select_design_opt_alg(alg_name):
@@ -19,7 +18,7 @@ def select_design_opt_alg(alg_name):
 
     Args:
         alg_name: String which states the design optimization method. Can be
-            `pso_batch` or `pso_sim`.
+            `pso_batch`, `pso_batch_sp` or `pso_sim`.
 
     Returns:
         The class of a design optimization method.
@@ -29,6 +28,8 @@ def select_design_opt_alg(alg_name):
     """
     if alg_name == "pso_batch":
         return PSO_batch
+    elif alg_name == "pso_batch_sp":
+        return PSO_batch_sp
     elif alg_name == "pso_sim":
         return PSO_simulation
     else:
@@ -66,13 +67,15 @@ class Coadaptation:
 
         self._replay = EvoReplayLocalGlobalStart(self._env,
             max_replay_buffer_size_species=int(1e6),
-            max_replay_buffer_size_population=int(1e7))
+            max_replay_buffer_size_population=int(1e7)
+        )
 
         self._rl_alg_class = select_rl_alg(self._config['rl_method'])
 
         self._networks = self._rl_alg_class.create_networks(env=self._env, config=config)
 
-        self._rl_alg = self._rl_alg_class(config=self._config, env=self._env , replay=self._replay, networks=self._networks)
+        self._rl_alg = self._rl_alg_class(config=self._config, env=self._env ,
+                                          replay=self._replay, networks=self._networks)
 
         self._do_alg_class = select_design_opt_alg(self._config['design_optim_method'])
         self._do_alg = self._do_alg_class(config=self._config, replay=self._replay, env=self._env)
@@ -96,12 +99,10 @@ class Coadaptation:
         Should be called before the first episode of a new design is
         executed. Resets variables such as _data_rewards for logging purposes
         etc.
-
         """
         # self._rl_alg.initialize_episode(init_networks = True, copy_from_gobal = True)
         self._rl_alg.episode_init()
         self._replay.reset_species_buffer()
-
         self._data_rewards = []
         self._episode_counter = 0
 
@@ -113,7 +114,6 @@ class Coadaptation:
             - Executing a training step
             - Evaluate the current policy
             - Log data
-
         """
         print("Time for one iteration: {}".format(time.time() - self._last_single_iteration_time))
         self._last_single_iteration_time = time.time()
@@ -200,7 +200,6 @@ class Coadaptation:
             # action, _ = self._policy_cpu.get_action(state, deterministic=True)
             action_dist, _ = self._policy_cpu.get_action(state)
             # action = action_dist.mean # makes it deterministic
-            # print(action_dist)
             action = action_dist
             new_state, reward, truncated, terminated, info = self._env.step(action)
             done = truncated or terminated
@@ -213,8 +212,8 @@ class Coadaptation:
         self._data_rewards.append(reward_ep)
 
     def save_networks(self):
-        """ Saves the networks on the disk.
-        """
+        """ Saves the networks on the disk. """
+
         if not self._config['save_networks']:
             return
 
@@ -236,8 +235,8 @@ class Coadaptation:
         torch.save(checkpoint, os.path.join(file_path, 'checkpoint_design_{}.chk'.format(self._design_counter)))
 
     def load_networks(self, path):
-        """ Loads netwokrs from the disk.
-        """
+        """ Loads networks from the disk. """
+
         model_data = torch.load(path) #, map_location=ptu.device)
 
         model_data_pop = model_data['population']
@@ -308,10 +307,14 @@ class Coadaptation:
 
         self._data_design_type = 'Optimized'
 
+        # full dimensions
         optimized_params = self._env.get_random_design()
+        # if one at a time, it need to be hidden detail of batch
+        # maybe random selection?
         q_network = self._rl_alg_class.get_q_network(self._networks['population'])
         policy_network = self._rl_alg_class.get_policy_network(self._networks['population'])
-        optimized_params = self._do_alg.optimize_design(design=optimized_params, q_network=q_network, policy_network=policy_network)
+        optimized_params = self._do_alg.optimize_design(design=optimized_params,
+                                                        q_network=q_network, policy_network=policy_network)
         optimized_params = list(optimized_params)
 
         for i in range(design_cycles):
@@ -327,12 +330,13 @@ class Coadaptation:
                 self._data_design_type = 'Optimized'
                 q_network = self._rl_alg_class.get_q_network(self._networks['population'])
                 policy_network = self._rl_alg_class.get_policy_network(self._networks['population'])
-                optimized_params = self._do_alg.optimize_design(design=optimized_params, q_network=q_network, policy_network=policy_network)
-                optimized_params = list(optimized_params)
+                optimized_params = self._do_alg.optimize_design(design=optimized_params,
+                                                                q_network=q_network, policy_network=policy_network)
             else:
                 self._data_design_type = 'Random'
                 optimized_params = self._env.get_random_design()
-                optimized_params = list(optimized_params)
+
+            optimized_params = list(optimized_params)
             self.initialize_episode()
 
     def _intial_design_loop(self, iterations):

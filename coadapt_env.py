@@ -9,7 +9,7 @@ from utils import BestEpisodesVideoRecorder
 
 
 class CoadaptEnv:
-    """Wraps chosen environment so it can work with CoAdapation algorithm"""
+    """ Wraps chosen environment so it can work with Coadapation algorithm """
     def __init__(self, config):
         self._config = config
         self._render = self._config['env']['render']

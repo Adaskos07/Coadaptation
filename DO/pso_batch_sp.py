@@ -7,7 +7,7 @@ import rlkit.torch.pytorch_util as ptu
 from .design_optimization import DesignOptimization
 
 
-class PSO_batch(DesignOptimization):
+class PSO_batch_sp(DesignOptimization):
     def __init__(self, config, replay, env):
         self._config = config
         self._replay = replay
@@ -56,6 +56,7 @@ class PSO_batch(DesignOptimization):
                     cost[i] = fval
             return cost
 
+        dimensions = len(design)
         lower_bounds = [l for l, _ in self._env.design_params_bounds]
         lower_bounds = np.array(lower_bounds)
         upper_bounds = [u for _, u in self._env.design_params_bounds]
@@ -63,7 +64,7 @@ class PSO_batch(DesignOptimization):
         bounds = (lower_bounds, upper_bounds)
         options = {'c1': 0.5, 'c2': 0.3, 'w':0.9}
         optimizer = ps.single.GlobalBestPSO(n_particles=700,
-                                            dimensions=len(design), bounds=bounds, options=options)
+                                            dimensions=dimensions, bounds=bounds, options=options)
 
         # Perform optimization
         cost, new_design = optimizer.optimize(f_qval, print_step=100, iters=250, verbose=3) #, n_processes=2)
